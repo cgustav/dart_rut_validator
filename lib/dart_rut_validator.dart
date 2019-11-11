@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 class RUTValidator {
   int numeros;
   String digitoVerificador;
+  String validationErrorText;
 
-  RUTValidator({int numero, String digitoVerificador}) {
-    this.numeros = numero;
-    this.digitoVerificador = digitoVerificador.toUpperCase();
+  RUTValidator(
+      {int numero, String digitoVerificador, String validationErrorText}) {
+    this.numeros = numero ?? 0;
+    this.digitoVerificador = digitoVerificador?.toUpperCase() ?? '';
+    this.validationErrorText = validationErrorText ?? 'RUT no válido.';
   }
 
   ///Retorna el valor del digito verificador [String]
@@ -36,42 +39,45 @@ class RUTValidator {
 
   ///Valida la validez de rut en base al cálculo de
   ///su dígito verificador y otros criterios.
-  static String validator(String value, {bool isFormatted = true}) {
-    //String textInput = (!isFormatted) ? _applyFormat(value) : value;
+  String validate(String value) {
+    print('VALIDATING...');
+    value = formatFromText(value);
+    print('INCOMING VALUE : $value');
+    try {
+      this.numeros = getRutNumbers(value);
+      this.digitoVerificador = getRutDV(value);
+      print('NUMEROS $numeros');
+      print('DV $digitoVerificador');
+    } catch (e) {
+      return this.validationErrorText;
+    }
+
+    return (value == null ||
+            value.length <= 10 ||
+            this.numeros < 1000000 ||
+            !this.esValido)
+        ? this.validationErrorText
+        : null;
   }
 
 //----------------------------------------
 // Formatters
 
   static String formatFromText(String value) {
-    if (_RUTValidatorUtils._checkIfRUTIsFormatted(value))
-      print('RUT CON FORMATO');
-    else
-      print('RUT SIN FORMATO');
+    value = deFormat(value);
+    return (value.length <= 8)
+        ? _RUTValidatorUtils._shortVersionFormat(value)
+        : _RUTValidatorUtils._longVersionFormat(value);
   }
 
   static void formatFromTextController(TextEditingController controller) {
     TextEditingValue oldValue =
         TextEditingValue(text: deFormat(controller.text));
     TextEditingValue newValue;
-    String finalValue;
 
-    if (oldValue.text.length > 8) {
-      finalValue =
-          '${oldValue.text[0]}${oldValue.text[1]}.${oldValue.text[2]}${oldValue.text[3]}'
-          '${oldValue.text[4]}.${oldValue.text[5]}${oldValue.text[6]}${oldValue.text[7]}'
-          '-${oldValue.text[8]}';
-    } else if (oldValue.text.length <= 8) {
-      List<String> outSt = [];
-      Map<int, String> mp = {1: '.', 4: '.', 7: '-'};
-
-      for (int i = 0; i < oldValue.text.length; i++) {
-        if (mp.containsKey(i)) outSt.add(mp[i]);
-        outSt.add(oldValue.text[i]);
-      }
-
-      finalValue = outSt.join('');
-    }
+    String finalValue = (oldValue.text.length <= 8)
+        ? _RUTValidatorUtils._shortVersionFormat(oldValue.text)
+        : _RUTValidatorUtils._longVersionFormat(oldValue.text);
 
     newValue = TextEditingValue(
         text: finalValue,
@@ -106,29 +112,23 @@ class _RUTValidatorUtils {
     return (result == 11 || result == 10) ? '0' : result.toString();
   }
 
-  static _checkIfRUTIsFormatted(String text) =>
-      (text.contains(RegExp(r'\.')) /*|| text.contains(RegExp(r'\-\.'))*/);
+  // static _checkIfRUTIsFormatted(String text) =>
+  //     (text.contains(RegExp(r'\.')) || text.contains(RegExp(r'\-')));
+
+  static String _shortVersionFormat(String input) {
+    List<String> output = [];
+    Map<int, String> mp = {1: '.', 4: '.', 7: '-'};
+
+    for (int i = 0; i < input.length; i++) {
+      if (mp.containsKey(i)) output.add(mp[i]);
+      output.add(input[i]);
+    }
+
+    return output.join('');
+  }
+
+  static String _longVersionFormat(String text) =>
+      '${text[0]}${text[1]}.${text[2]}${text[3]}'
+      '${text[4]}.${text[5]}${text[6]}${text[7]}'
+      '-${text[8]}';
 }
-
-// class RUTFieldValidator {
-//   static String validate(String value) {
-//     try {
-//       MODValidator rut = MODValidator(
-//           numero: MODValidator.getRutNumbers(value),
-//           digitoVerificador: MODValidator.getRutDV(value));
-
-//       /* DEBUG
-//       print('DV VERIFICADO: ${rut.dVCalculado}');
-//       print('El rut es $value');
-//       print('El length es ${value.length}');
-//       */
-//       //RegExp criteria = RegExp(r'^\d{1,2}\.\d{3}\.\d{3}[-][0-9kK]{1}$');
-
-//       return (value.length <= 10 || value.isEmpty || !rut.esValido)
-//           ? 'RUT No válido'
-//           : null;
-//     } catch (e) {
-//       return 'RUT No válido';
-//     }
-//   }
-// }
