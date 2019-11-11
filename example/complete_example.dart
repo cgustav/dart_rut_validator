@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:dart_rut_validator/dart_rut_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  void onSubmitAction() {}
+  void onSubmitAction() {
+    //_rutController.text = RUTValidator.formatFromText(_rutController.text);
+    _formKey.currentState.validate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: _rutController,
                 hintText: 'Ingrese su RUT',
                 onChanged: (String text) {
-                  print('TEXTING $text');
-                  //RUTValidator.formatFromTextController(_rutController);
-                  RUTValidator.formatFromText(text);
+                  //print('TEXTING $text');
+                  RUTValidator.formatFromTextController(_rutController);
+                  //_rutController.text = text;
                 },
+                validator:
+                    RUTValidator(validationErrorText: 'Not valid RUT').validate,
                 maxLines: 1),
 
             Divider(
