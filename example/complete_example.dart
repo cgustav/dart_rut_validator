@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'RUT Validator Example',
       theme: ThemeData(
-          primarySwatch: Colors.blue, accentColor: Colors.amberAccent[700]),
+          primarySwatch: Colors.teal, //0xFF004D40
+          accentColor: Colors.amberAccent[700]),
       home: MyHomePage(title: 'RUT Validator Example'),
     );
   }
@@ -36,27 +37,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   TextEditingController _rutController;
 
+  final Color mainColor = Colors.deepPurple;
+  final Color secondaryColor = Colors.teal.shade900;
+
   @override
   void initState() {
     _rutController = TextEditingController(text: '');
     super.initState();
   }
 
-  void onSubmitAction() {
-    //_rutController.text = RUTValidator.formatFromText(_rutController.text);
-    _formKey.currentState.validate();
+  void onSubmitAction(BuildContext context) {
+    bool result = _formKey.currentState.validate();
+    if (result) Scaffold.of(context).showSnackBar(snack);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListView(shrinkWrap: true,
-          //physics: NeverScrollableScrollPhysics(),
-          children: [_buildForm()]),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Builder(builder: (BuildContext context) {
+          return ListView(children: [_buildForm(context)]);
+        }));
   }
 
   //--------------------------------------------
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///Will build formulary which contains
   ///text inputs and submit button.
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 100),
       padding: EdgeInsets.symmetric(horizontal: 45),
@@ -79,14 +82,19 @@ class _MyHomePageState extends State<MyHomePage> {
             //INPUT RUT
             _inputTextTemplate(
                 controller: _rutController,
-                hintText: 'Ingrese su RUT',
+                hintText: 'Ingrese RUT',
+                icon: Icon(
+                  Icons.person,
+                  size: 40,
+                  color: mainColor.withOpacity(0.6),
+                ),
                 onChanged: (String text) {
                   //print('TEXTING $text');
                   RUTValidator.formatFromTextController(_rutController);
                   //_rutController.text = text;
                 },
                 validator:
-                    RUTValidator(validationErrorText: 'Not valid RUT').validate,
+                    RUTValidator(validationErrorText: 'RUT no válido').validate,
                 maxLines: 1),
 
             Divider(
@@ -95,8 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //SUBMIT BUTTON
             _buildSubmitButton(
-                onPressed: onSubmitAction,
-                mainColor: Colors.deepPurple,
+                onPressed: () {
+                  onSubmitAction(context);
+                },
+                mainColor: mainColor,
                 height: 45,
                 width: 180),
           ],
@@ -122,7 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
         borderSide: BorderSide(color: mainColor, width: 2),
         child: Center(
           child: Text(
-            'VALIDATE',
+            // 'VALIDAR',
+            'ENVIAR',
             style: TextStyle(
               fontSize: 18,
               color: mainColor,
@@ -142,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
       {TextEditingController controller,
       String hintText,
       int maxLines,
+      Widget icon,
       Function(String) onChanged,
       String Function(String) validator}) {
     return TextFormField(
@@ -150,13 +162,10 @@ class _MyHomePageState extends State<MyHomePage> {
       decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-              color: Colors.blue.withOpacity(0.6),
+              color: secondaryColor.withOpacity(0.6),
               letterSpacing: 0.6,
               fontFeatures: [FontFeature.tabularFigures()]),
-          icon: Icon(
-            Icons.person,
-            size: 32,
-          )),
+          icon: icon),
       controller: controller,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -170,4 +179,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
+
+  final SnackBar snack = SnackBar(
+      elevation: 1,
+      duration: Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: 'Ok',
+        onPressed: () {},
+      ),
+      content: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.0)
+            .add(EdgeInsets.only(left: 10.0)),
+        //margin: EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          'Datos enviados con éxito :)',
+          style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 16,
+              wordSpacing: 0.7,
+              fontStyle: FontStyle.italic),
+        ),
+      ));
 }
