@@ -84,7 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 150,
             ),
 
-            //Input Text Field
+            //-----------------------------
+            //INPUT TEXT FIELD
+
             TextFormField(
               maxLines: 1,
               onChanged: onChangedApplyFormat,
@@ -108,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.7),
               validator:
-                  RUTValidator(validationErrorText: 'RUT no válido').validate,
+                  RUTValidator(validationErrorText: 'RUT no válido').validator,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(12),
               ],
@@ -118,82 +120,35 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 60,
             ),
 
+            //-----------------------------
             //SUBMIT BUTTON
-            _buildSubmitButton(
+
+            Container(
+              height: 45,
+              width: 180,
+              child: OutlineButton(
                 onPressed: () {
                   onSubmitAction(context);
                 },
-                mainColor: mainColor,
-                height: 45,
-                width: 180),
+                color: mainColor,
+                borderSide: BorderSide(color: mainColor, width: 2),
+                child: Center(
+                  child: Text(
+                    // 'VALIDAR',
+                    'ENVIAR',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: mainColor,
+                      fontFamily: 'Roboto',
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  //--------------
-  // SUBMIT BUTTON
-
-  Widget _buildSubmitButton(
-      {Function onPressed,
-      Color mainColor = Colors.red,
-      double height,
-      double width}) {
-    return Container(
-      height: height,
-      width: width,
-      child: OutlineButton(
-        onPressed: onPressed,
-        color: mainColor,
-        borderSide: BorderSide(color: mainColor, width: 2),
-        child: Center(
-          child: Text(
-            // 'VALIDAR',
-            'ENVIAR',
-            style: TextStyle(
-              fontSize: 18,
-              color: mainColor,
-              fontFamily: 'Roboto',
-              letterSpacing: 0.8,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  //--------------
-  // INPUT TEXT
-
-  Widget _inputTextTemplate(
-      {TextEditingController controller,
-      String hintText,
-      int maxLines,
-      Widget icon,
-      Function(String) onChanged,
-      String Function(String) validator}) {
-    return TextFormField(
-      maxLines: maxLines,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-              color: secondaryColor.withOpacity(0.6),
-              letterSpacing: 0.6,
-              fontFeatures: [FontFeature.tabularFigures()]),
-          icon: icon),
-      controller: controller,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-          color: Colors.deepPurple[800].withOpacity(0.9),
-          fontSize: 19,
-          fontWeight: FontWeight.normal,
-          letterSpacing: 0.7),
-      validator: validator,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(12),
-      ],
     );
   }
 

@@ -1,3 +1,5 @@
-## [0.0.1] - TODO: Add release date.
+## [0.1.1] - Pub.dev Official Release.
 
-* TODO: Describe initial release.
+* Three use case implementation examples in README.
+* Core functionalities and documentation.
+* A complete implementation example.

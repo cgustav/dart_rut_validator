@@ -3,25 +3,23 @@ library dart_rut_validator;
 import 'package:flutter/material.dart';
 
 class RUTValidator {
-  int numeros;
-  String digitoVerificador;
+  int numbers;
+  String dv;
   String validationErrorText;
 
-  RUTValidator(
-      {int numero, String digitoVerificador, String validationErrorText}) {
-    this.numeros = numero ?? 0;
-    this.digitoVerificador = digitoVerificador?.toUpperCase() ?? '';
+  RUTValidator({int numbers, String dv, String validationErrorText}) {
+    this.numbers = numbers ?? 0;
+    this.dv = dv?.toUpperCase() ?? '';
     this.validationErrorText = validationErrorText ?? 'RUT no válido.';
   }
 
   ///Retorna el valor del digito verificador [String]
   ///en base a los números que componen la cadena de
   ///Strings mediante el calculo Mod 11.
-  String get digitoVerificado => _RUTValidatorUtils._calcMod11(this.numeros);
+  String get digitoVerificado => _RUTValidatorUtils._calcMod11(this.numbers);
 
-  ///Retorna la validez
-  bool get esValido =>
-      (_RUTValidatorUtils._calcMod11(this.numeros) == this.digitoVerificador);
+  ///Retorna la validez de un rut de entrada
+  bool get isValid => (_RUTValidatorUtils._calcMod11(this.numbers) == this.dv);
 
   ///Obtiene dígito verificador a partir de un RUT con formato de
   ///puntos y guiones.
@@ -37,25 +35,23 @@ class RUTValidator {
   static List<String> _getRUTElements(String rutString) =>
       rutString.split('.').join('').split('-');
 
-  ///Valida la validez de rut en base al cálculo de
-  ///su dígito verificador y otros criterios.
-  String validate(String value) {
+  ///Valida rut en base al cálculo de
+  ///su dígito verificador y formato.
+  String validator(String value) {
     print('VALIDATING...');
     value = formatFromText(value);
     print('INCOMING VALUE : $value');
     try {
-      this.numeros = getRutNumbers(value);
-      this.digitoVerificador = getRutDV(value);
-      print('NUMEROS $numeros');
-      print('DV $digitoVerificador');
+      this.numbers = getRutNumbers(value);
+      this.dv = getRutDV(value);
     } catch (e) {
       return this.validationErrorText;
     }
 
     return (value == null ||
             value.length <= 10 ||
-            this.numeros < 1000000 ||
-            !this.esValido)
+            this.numbers < 1000000 ||
+            !this.isValid)
         ? this.validationErrorText
         : null;
   }
@@ -63,6 +59,11 @@ class RUTValidator {
 //----------------------------------------
 // Formatters
 
+  ///Aplica el formato específico de RUT
+  ///a partir de un texto.
+  ///Formatos soportados:
+  ///* xx.xxx.xxx-@
+  ///* x.xxx.xxx-@
   static String formatFromText(String value) {
     value = deFormat(value);
     return (value.length <= 8)
@@ -70,6 +71,11 @@ class RUTValidator {
         : _RUTValidatorUtils._longVersionFormat(value);
   }
 
+  ///Aplica el formato específico de RUT
+  ///a partir de un controlador de texto.
+  ///Formatos soportados:
+  ///* xx.xxx.xxx-@
+  ///* x.xxx.xxx-@
   static void formatFromTextController(TextEditingController controller) {
     TextEditingValue oldValue =
         TextEditingValue(text: deFormat(controller.text));
@@ -87,33 +93,32 @@ class RUTValidator {
     controller.selection = TextEditingController.fromValue(newValue).selection;
   }
 
+  ///Quita el formato específico de RUT
+  ///de un texto.
+  ///* _Ejemplo_:
+  ///```
+  ///print(RUTValidator.deformat('12.933.245-2'));//129332452
+  ///```
   static String deFormat(String value) {
     return value.split('.').join('').split('-').join('');
   }
-
-  //Internals
-
-  //static String _applyFormat(String value) {}
 }
 
 class _RUTValidatorUtils {
   static String _calcMod11(int nums) {
-    final String stringNumero = nums.toString();
+    final String stringNum = nums.toString();
     final List<int> factors = [3, 2, 7, 6, 5, 4, 3, 2];
-    int indiceFactor = factors.length - 1;
+    int indexFactor = factors.length - 1;
     int calc = 0;
 
-    for (int i = stringNumero.length - 1; i >= 0; i--) {
-      calc += (factors[indiceFactor] * int.parse(stringNumero[i]));
-      indiceFactor--;
+    for (int i = stringNum.length - 1; i >= 0; i--) {
+      calc += (factors[indexFactor] * int.parse(stringNum[i]));
+      indexFactor--;
     }
     int result = 11 - (calc % 11);
 
     return (result == 11 || result == 10) ? '0' : result.toString();
   }
-
-  // static _checkIfRUTIsFormatted(String text) =>
-  //     (text.contains(RegExp(r'\.')) || text.contains(RegExp(r'\-')));
 
   static String _shortVersionFormat(String input) {
     List<String> output = [];

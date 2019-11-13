@@ -1,8 +1,8 @@
 name: dart_rut_validator
-description: A new Flutter package project.
-version: 0.0.1
-author:
-homepage:
+description: A small dart library to format, manipulate and validate chilean RUT easily.
+version: 0.1.1
+author: Eduardo Munoz
+homepage: https://github.com/cgustav
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
