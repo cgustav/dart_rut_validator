@@ -1,4 +1,4 @@
-## [0.1.1] - Pub.dev Official Release.
+## [1.0.0] - Pub.dev Official Release.
 
 * Three use case implementation examples in README.
 * Core functionalities and documentation.

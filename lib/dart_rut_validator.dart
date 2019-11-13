@@ -38,13 +38,12 @@ class RUTValidator {
   ///Valida rut en base al cálculo de
   ///su dígito verificador y formato.
   String validator(String value) {
-    print('VALIDATING...');
     value = formatFromText(value);
-    print('INCOMING VALUE : $value');
     try {
       this.numbers = getRutNumbers(value);
       this.dv = getRutDV(value);
     } catch (e) {
+      print('RUT Validation Error: $e');
       return this.validationErrorText;
     }
 
