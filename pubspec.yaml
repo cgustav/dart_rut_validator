@@ -1,7 +1,7 @@
 name: dart_rut_validator
 description: A small dart library to format, manipulate and validate chilean RUT easily.
 version: 1.0.0
-author: Eduardo Munoz
+author: Eduardo Munoz <edomun@protonmail.com>
 homepage: https://github.com/cgustav
 
 environment:
