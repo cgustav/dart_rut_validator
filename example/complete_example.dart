@@ -35,20 +35,25 @@ class _MyHomePageState extends State<MyHomePage> {
   //---------------------------------------
   // TEXT CONTROLLERS
 
-  TextEditingController _rutController;
+  TextEditingController _rutController = TextEditingController();
 
   final Color mainColor = Colors.deepPurple;
   final Color secondaryColor = Colors.teal.shade900;
 
   @override
   void initState() {
-    _rutController = TextEditingController(text: '');
+    //_rutController = TextEditingController(text: '');
+    _rutController.clear();
     super.initState();
   }
 
   void onSubmitAction(BuildContext context) {
     bool result = _formKey.currentState.validate();
     if (result) Scaffold.of(context).showSnackBar(snack);
+  }
+
+  void onChangedApplyFormat(String text) {
+    RUTValidator.formatFromTextController(_rutController);
   }
 
   @override
@@ -79,23 +84,35 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 150,
             ),
 
-            //INPUT RUT
-            _inputTextTemplate(
-                controller: _rutController,
+            //Input Text Field
+            TextFormField(
+              maxLines: 1,
+              onChanged: onChangedApplyFormat,
+              decoration: InputDecoration(
                 hintText: 'Ingrese RUT',
+                hintStyle: TextStyle(
+                    color: secondaryColor.withOpacity(0.6),
+                    letterSpacing: 0.6,
+                    fontFeatures: [FontFeature.tabularFigures()]),
                 icon: Icon(
                   Icons.person,
                   size: 40,
                   color: mainColor.withOpacity(0.6),
                 ),
-                onChanged: (String text) {
-                  //print('TEXTING $text');
-                  RUTValidator.formatFromTextController(_rutController);
-                  //_rutController.text = text;
-                },
-                validator:
-                    RUTValidator(validationErrorText: 'RUT no válido').validate,
-                maxLines: 1),
+              ),
+              controller: _rutController,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.deepPurple[800].withOpacity(0.9),
+                  fontSize: 19,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0.7),
+              validator:
+                  RUTValidator(validationErrorText: 'RUT no válido').validate,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(12),
+              ],
+            ),
 
             Divider(
               height: 60,
