@@ -90,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             TextFormField(
               maxLines: 1,
               onChanged: onChangedApplyFormat,
+              keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                 hintText: 'Ingrese RUT',
                 hintStyle: TextStyle(
@@ -113,6 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   RUTValidator(validationErrorText: 'RUT no válido').validator,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(12),
+                ///Permitir solo numeros y la letra K en el textFormField
+                WhitelistingTextInputFormatter(RegExp(r'[0-9kK]')),
               ],
             ),
 
