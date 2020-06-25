@@ -1,13 +1,14 @@
-// import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:dart_rut_validator/dart_rut_validator.dart';
 
-// import 'package:dart_rut_validator/dart_rut_validator.dart';
+import 'determiner.dart';
 
-// void main() {
-//   test('adds one to input values', () {
-//     final calculator = Calculator();
-//     expect(calculator.addOne(2), 3);
-//     expect(calculator.addOne(-7), -6);
-//     expect(calculator.addOne(0), 1);
-//     expect(() => calculator.addOne(null), throwsNoSuchMethodError);
-//   });
-// }
+void main() {
+  group('VALIDATION', () {
+    final determiner = Determiner();
+
+    test('All RUT are valids', () {
+      expect(determiner.getFailedValues(), []);
+    });
+  });
+}

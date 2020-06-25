@@ -163,7 +163,6 @@ class _MyHomePageState extends State<MyHomePage> {
       content: Container(
         padding: EdgeInsets.symmetric(vertical: 8.0)
             .add(EdgeInsets.only(left: 10.0)),
-        //margin: EdgeInsets.only(bottom: 8.0),
         child: Text(
           'Datos enviados con éxito :)',
           style: TextStyle(

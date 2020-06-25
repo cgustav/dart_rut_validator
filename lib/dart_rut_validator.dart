@@ -1,6 +1,8 @@
 library dart_rut_validator;
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class RUTValidator {
   int numbers;
@@ -23,7 +25,10 @@ class RUTValidator {
 
   ///Obtiene dígito verificador a partir de un RUT con formato de
   ///puntos y guiones.
-  static String getRutDV(String rutString) => _getRUTElements(rutString)[1];
+  static String getRutDV(String rutString) {
+    dynamic actualDV = _getRUTElements(rutString)[1];
+    return (RegExp(r'[0kK]').hasMatch(actualDV)) ? '0' : actualDV;
+  }
 
   ///Obtiene los elementos numéricos que componen
   ///el RUT, excluyendo el digito verificador.
