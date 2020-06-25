@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:dart_rut_validator/dart_rut_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -114,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   RUTValidator(validationErrorText: 'RUT no válido').validator,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(12),
+
                 ///Permitir solo numeros y la letra K en el textFormField
                 WhitelistingTextInputFormatter(RegExp(r'[0-9kK]')),
               ],

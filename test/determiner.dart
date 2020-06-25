@@ -96,7 +96,6 @@ class Determiner {
       String result = RUTValidator(validationErrorText: 'BAD').validator(rut);
       if (result != null) failedMessages.add(result);
     });
-
     return failedMessages;
   }
 

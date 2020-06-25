@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dart_rut_validator/dart_rut_validator.dart';
-
 import 'determiner.dart';
 
 void main() {

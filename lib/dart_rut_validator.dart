@@ -1,6 +1,5 @@
 library dart_rut_validator;
 
-// import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -106,13 +105,13 @@ class RUTValidator {
   static String deFormat(String value) {
     return value.split('.').join('').split('-').join('');
   }
-  
+
   ///Quita el formato específico de RUT
   ///de un text y lo deja con el guión.
   ///```
   ///print(RUTValidator.deformat('12.933.245-2'));//12933245-2
   ///```
-   static String deFormatWithHyphen(String value) {
+  static String deFormatWithHyphen(String value) {
     return value.split('.').join('');
   }
 }
