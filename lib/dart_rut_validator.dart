@@ -46,7 +46,7 @@ class RUTValidator {
       this.numbers = getRutNumbers(value);
       this.dv = getRutDV(value);
     } catch (e) {
-      print('RUT Validation Error: $e');
+      // print('RUT Validation Error: $e');
       return this.validationErrorText;
     }
 
