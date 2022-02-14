@@ -1,6 +1,5 @@
 library dart_rut_validator;
 
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class RUTValidator {
@@ -8,11 +7,10 @@ class RUTValidator {
   String dv;
   String validationErrorText;
 
-  RUTValidator({int numbers, String dv, String validationErrorText}) {
-    this.numbers = numbers ?? 0;
-    this.dv = dv?.toUpperCase() ?? '';
-    this.validationErrorText = validationErrorText ?? 'RUT no válido.';
-  }
+  RUTValidator({int? numbers, String? dv, String? validationErrorText})
+      : this.numbers = numbers ?? 0,
+        this.dv = dv?.toUpperCase() ?? '',
+        this.validationErrorText = validationErrorText ?? 'RUT no válido.';
 
   ///Retorna el valor del digito verificador [String]
   ///en base a los números que componen la cadena de
@@ -41,7 +39,8 @@ class RUTValidator {
 
   ///Valida rut en base al cálculo de
   ///su dígito verificador y formato.
-  String validator(String value) {
+  String? validator(String? value) {
+    if (value == null) return null;
     value = formatFromText(value);
     try {
       this.numbers = getRutNumbers(value);
@@ -51,10 +50,7 @@ class RUTValidator {
       return this.validationErrorText;
     }
 
-    return (value == null ||
-            value.length <= 10 ||
-            this.numbers < 1000000 ||
-            !this.isValid)
+    return (value.length <= 10 || this.numbers < 1000000 || !this.isValid)
         ? this.validationErrorText
         : null;
   }
@@ -137,7 +133,7 @@ class _RUTValidatorUtils {
     Map<int, String> mp = {1: '.', 4: '.', 7: '-'};
 
     for (int i = 0; i < input.length; i++) {
-      if (mp.containsKey(i)) output.add(mp[i]);
+      if (mp.containsKey(i)) output.add(mp[i]!);
       output.add(input[i]);
     }
 

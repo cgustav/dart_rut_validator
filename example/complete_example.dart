@@ -12,15 +12,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'RUT Validator Example',
       theme: ThemeData(
-          primarySwatch: Colors.teal, //0xFF004D40
-          accentColor: Colors.amberAccent[700]),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal)
+              .copyWith(secondary: Colors.amberAccent[700])),
       home: MyHomePage(title: 'RUT Validator Example'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -47,8 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onSubmitAction(BuildContext context) {
-    bool result = _formKey.currentState.validate();
-    if (result) Scaffold.of(context).showSnackBar(snack);
+    bool result = _formKey.currentState!.validate();
+    if (result) ScaffoldMessenger.of(context).showSnackBar(snack);
   }
 
   void onChangedApplyFormat(String text) {
@@ -72,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ///Will build formulary which contains
   ///text inputs and submit button.
   Widget _buildForm(BuildContext context) {
+    final rutValidator = RUTValidator(validationErrorText: 'RUT no válido');
     return Container(
       margin: EdgeInsets.only(top: 100),
       padding: EdgeInsets.symmetric(horizontal: 45),
@@ -105,17 +106,18 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _rutController,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.deepPurple[800].withOpacity(0.9),
+                  color: Colors.deepPurple.shade800.withOpacity(0.9),
                   fontSize: 19,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.7),
-              validator:
-                  RUTValidator(validationErrorText: 'RUT no válido').validator,
+              validator: (value) {
+                return rutValidator.validator(value);
+              },
               inputFormatters: [
                 LengthLimitingTextInputFormatter(12),
 
                 ///Permitir solo numeros y la letra K en el textFormField
-                WhitelistingTextInputFormatter(RegExp(r'[0-9kK]')),
+                // WhitelistingTextInputFormatter(RegExp(r'[0-9kK]')),
               ],
             ),
 
