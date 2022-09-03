@@ -93,7 +93,7 @@ class Determiner {
   Iterable<String> getFailedMessages() {
     List<String> failedMessages = [];
     ruts.forEach((rut) {
-      String result = RUTValidator(validationErrorText: 'BAD').validator(rut);
+      String? result = RUTValidator(validationErrorText: 'BAD').validator(rut);
       if (result != null) failedMessages.add(result);
     });
     return failedMessages;
@@ -102,7 +102,7 @@ class Determiner {
   List<String> getFailedValues() {
     List<String> failedMessages = [];
     ruts.forEach((rut) {
-      String result = RUTValidator(validationErrorText: 'BAD').validator(rut);
+      String? result = RUTValidator(validationErrorText: 'BAD').validator(rut);
       if (result != null) failedMessages.add(rut);
     });
     return failedMessages;
